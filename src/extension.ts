@@ -15,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
                 let terminal = vscode.window.activeTerminal;
                 if (!terminal) {
                     // Si no hay una terminal activa, crear una nueva
-                    terminal = vscode.window.createTerminal('Copipaste Terminal');
+                    terminal = vscode.window.createTerminal('ComandoExpress Terminal');
                 }
 
                 // Mostrar la terminal para asegurarse de que sea visible
