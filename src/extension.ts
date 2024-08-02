@@ -1,26 +1,49 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+    let disposable = vscode.commands.registerCommand('extension.runCommandsFromFile', async () => {
+        const options: vscode.OpenDialogOptions = {
+            canSelectMany: false,
+            openLabel: 'Open',
+            filters: {
+                'paste file': ['pf']
+            }
+        };
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "copipaste" is now active!');
+        const fileUri = await vscode.window.showOpenDialog(options);
+        if (fileUri && fileUri[0]) {
+            const filePath = fileUri[0].fsPath;
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('copipaste.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Copipaste!');
-	});
+            // Get the current working directory
+            const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
 
-	context.subscriptions.push(disposable);
+            if (workspaceFolder) {
+                // Read the file
+                fs.readFile(filePath, 'utf8', (err: NodeJS.ErrnoException | null, data: string) => {
+                    if (err) {
+                        vscode.window.showErrorMessage('Failed to read file.');
+                        return;
+                    }
+
+                    const commands = data.split('\n').filter(cmd => cmd.trim().length > 0);
+
+                    // Create a new terminal
+                    const terminal = vscode.window.createTerminal('Command Executor');
+                    terminal.show();
+
+                    // Execute commands
+                    commands.forEach(command => {
+                        terminal.sendText(command);
+                    });
+                });
+            } else {
+                vscode.window.showErrorMessage('No workspace folder found.');
+            }
+        }
+    });
+
+    context.subscriptions.push(disposable);
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}

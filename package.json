@@ -1,7 +1,7 @@
 {
   "name": "copipaste",
   "displayName": "Copipaste",
-  "description": "extensión para Visual Studio Code permite ejecutar archivos con la extensión .fs directamente en la consola",
+  "description": "Ejecuta comandos desde un archivo de texto",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.92.0"
@@ -9,15 +9,26 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "copipaste.helloWorld",
-        "title": "Hello World"
+        "command": "extension.runCommandsFromFile",
+        "title": "Ejecutar comando desde .PF"
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "extension.runCommandsFromFile",
+          "when": "resourceExtname == .pf",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -37,5 +48,8 @@
     "typescript": "^5.4.5",
     "@vscode/test-cli": "^0.0.9",
     "@vscode/test-electron": "^2.4.0"
+  }, "repository": {
+    "type": "git",
+    "url": "https://github.com/ferodriguezc/copipaste.git"
   }
 }

@@ -1,0 +1,4 @@
+code --uninstall-extension undefined_publisher.copipaste
+npm run compile
+npx vsce package
+code --install-extension copipaste-0.0.1.vsix
