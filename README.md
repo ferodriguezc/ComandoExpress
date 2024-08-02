@@ -1,6 +1,6 @@
-# Copipaste
+# ComandoExpress
 
-**Copipaste** es una extensión para Visual Studio Code que permite ejecutar archivos con la extensión `.fs` directamente en la consola de comandos. Esta herramienta facilita la integración y ejecución de comandos desde tu entorno de desarrollo.
+**ComandoExpress** es una extensión para Visual Studio Code que permite ejecutar archivos con la extensión `.fs` directamente en la consola de comandos. Esta herramienta facilita la integración y ejecución de comandos desde tu entorno de desarrollo.
 
 ## Características
 
@@ -14,7 +14,7 @@ Para instalar la extensión, sigue estos pasos:
 
 1. Abre Visual Studio Code.
 2. Ve a la vista de extensiones (Ctrl+Shift+X o Cmd+Shift+X en macOS).
-3. Busca "Copipaste" en el marketplace.
+3. Busca "ComandoExpress" en el marketplace.
 4. Haz clic en "Instalar".
 
 O usa el siguiente comando en tu terminal de VS Code:
