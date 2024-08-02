@@ -10,14 +10,14 @@
     "Other"
   ],
   "activationEvents": [
-    
+    "onCommand:extension.runCommandsFromFile"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "extension.runCommandsFromFile",
-        "title": "Ejecutar comando desde .PF"
+        "title": "Ejecutar comando desde .pf"
       }
     ],
     "menus": {
@@ -35,7 +35,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src --ext ts",
+    "lint": "eslint src --ext .ts",
     "test": "vscode-test"
   },
   "devDependencies": {
@@ -48,8 +48,12 @@
     "typescript": "^5.4.5",
     "@vscode/test-cli": "^0.0.9",
     "@vscode/test-electron": "^2.4.0"
-  }, "repository": {
+  },
+  "repository": {
     "type": "git",
     "url": "https://github.com/ferodriguezc/copipaste.git"
-  }
+  },
+  "author": "FRCreative",
+  "publisher": "FRCreative",
+  "icon": "images/logo.png"
 }

@@ -2,47 +2,45 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 
 export function activate(context: vscode.ExtensionContext) {
-    let disposable = vscode.commands.registerCommand('extension.runCommandsFromFile', async () => {
-        const options: vscode.OpenDialogOptions = {
-            canSelectMany: false,
-            openLabel: 'Open',
-            filters: {
-                'paste file': ['pf']
+    // Registrar el comando 'extension.runCommandsFromFile'
+    let disposable = vscode.commands.registerCommand('extension.runCommandsFromFile', async (fileUri: vscode.Uri) => {
+        // Verificar si el URI del archivo es válido
+        if (fileUri && fileUri.scheme === 'file') {
+            try {
+                // Obtener la ruta del archivo y leer su contenido
+                const filePath = fileUri.fsPath;
+                const commands = fs.readFileSync(filePath, 'utf8').split('\n').filter(line => line.trim() !== '');
+
+                // Intentar obtener la terminal activa
+                let terminal = vscode.window.activeTerminal;
+                if (!terminal) {
+                    // Si no hay una terminal activa, crear una nueva
+                    terminal = vscode.window.createTerminal('Copipaste Terminal');
+                }
+
+                // Mostrar la terminal para asegurarse de que sea visible
+                terminal.show();
+
+                // Enviar cada comando leído del archivo a la terminal
+                for (const command of commands) {
+                    terminal.sendText(command);
+                }
+
+            } catch (error) {
+                // Mostrar un mensaje de error si ocurre algún problema
+                if (error instanceof Error) {
+                    vscode.window.showErrorMessage(`Error al ejecutar los comandos: ${error.message}`);
+                } else {
+                    vscode.window.showErrorMessage('Error desconocido.');
+                }
             }
-        };
-
-        const fileUri = await vscode.window.showOpenDialog(options);
-        if (fileUri && fileUri[0]) {
-            const filePath = fileUri[0].fsPath;
-
-            // Get the current working directory
-            const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
-
-            if (workspaceFolder) {
-                // Read the file
-                fs.readFile(filePath, 'utf8', (err: NodeJS.ErrnoException | null, data: string) => {
-                    if (err) {
-                        vscode.window.showErrorMessage('Failed to read file.');
-                        return;
-                    }
-
-                    const commands = data.split('\n').filter(cmd => cmd.trim().length > 0);
-
-                    // Create a new terminal
-                    const terminal = vscode.window.createTerminal('Command Executor');
-                    terminal.show();
-
-                    // Execute commands
-                    commands.forEach(command => {
-                        terminal.sendText(command);
-                    });
-                });
-            } else {
-                vscode.window.showErrorMessage('No workspace folder found.');
-            }
+        } else {
+            // Mostrar un mensaje de error si el URI del archivo no es válido
+            vscode.window.showErrorMessage('No se ha proporcionado un archivo válido.');
         }
     });
 
+    // Añadir el comando a las suscripciones del contexto de la extensión
     context.subscriptions.push(disposable);
 }
 
